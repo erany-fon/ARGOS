@@ -1,8 +1,6 @@
 package com.example.my_app_agroberries.domain.model
 
-
-data class Tunel(
-    val idTunel: Int,
-    val numeroTunel: String,
+data class UsuarioRancho(
+    val idUsuario: Int,
     val idRancho: Int
 )
