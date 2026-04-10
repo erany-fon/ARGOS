@@ -4,6 +4,7 @@ data class Usuario (
     val idUsuario: Int,
     val nombre: String,
     val apellido: String,
-    val contraseña: String,
+    val email: String,
+    //val contraseña: String, nunca en el models
     val rol: String
 )
