@@ -13,7 +13,7 @@ class LoginUseCase @Inject constructor(
         contrasena: String
     ): Result<Usuario> {
 
-        // validaciones ANTES de ir a la BD
+        // validaciones antes de ir a la BD
         if (identificador.isBlank()) {
             return Result.failure(Exception("El nombre o email no puede estar vacío"))
         }

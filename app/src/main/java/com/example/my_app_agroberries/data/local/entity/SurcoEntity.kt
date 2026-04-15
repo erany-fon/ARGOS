@@ -2,6 +2,8 @@ package com.example.my_app_agroberries.data.local.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import androidx.room.Index
+
 
 @Entity(
     tableName = "surcos",
@@ -9,8 +11,9 @@ import androidx.room.PrimaryKey
         entity = TunelEntity::class,
         parentColumns = ["idTunel"],
         childColumns = ["idTunel"],
-        onDelete = ForeignKey.CASCADE //si se borra el tunel se borra el surco
-    )]
+        onDelete = ForeignKey.CASCADE //si se borra el tunel tambien se borra el surco
+    )],
+    indices = [Index(value = ["idTunel"])]
 )
 data class SurcoEntity(
     @PrimaryKey

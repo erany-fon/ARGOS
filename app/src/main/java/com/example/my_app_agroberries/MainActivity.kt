@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.my_app_agroberries.ui.theme.My_App_AgroBerriesTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+//añadinas
+import androidx.navigation.compose.rememberNavController
+import com.example.my_app_agroberries.core.navigation.NavGraph
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -27,6 +29,8 @@ class MainActivity : ComponentActivity() {
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
+                    val navController = rememberNavController()
+                    NavGraph(navController = navController)
                 }
             }
         }
@@ -36,7 +40,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hedwdwllo $name!",
+        text = "Bienvenido a AgroBerries, $name!",
         modifier = modifier
     )
 

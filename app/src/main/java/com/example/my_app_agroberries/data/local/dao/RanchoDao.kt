@@ -9,7 +9,10 @@ import kotlinx.coroutines.flow.Flow
 interface  RanchoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(ranchos: List<RanchoEntity>)
-    //trae los ranchos usando tabla puente
+
+    @Query("SELECT * FROM ranchos")
+    fun getRanchos(): Flow<List<RanchoEntity>>
+
     @Query("""
         SELECT r.* FROM ranchos r
         INNER JOIN Usuario_Rancho ur ON r.idRancho = ur.idRancho

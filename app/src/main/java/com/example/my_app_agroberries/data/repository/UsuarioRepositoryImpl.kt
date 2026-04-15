@@ -6,7 +6,6 @@ import com.example.my_app_agroberries.domain.model.Usuario
 import com.example.my_app_agroberries.domain.repository.UsuarioRepository
 import javax.inject.Inject
 
-// @Inject → Hilt sabe cómo crear esta clase automáticamente
 class UsuarioRepositoryImpl @Inject constructor(
     private val usuarioDao: UsuarioDao
     ) : UsuarioRepository {

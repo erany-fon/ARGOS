@@ -21,8 +21,9 @@ import com.example.my_app_agroberries.data.local.entity.*
     abstract class AppDatabase : RoomDatabase() {
         abstract fun UsuarioDao(): UsuarioDao
         abstract fun RanchoDao(): RanchoDao
+    abstract fun UsuarioRanchoDao(): UsuarioRanchoDao
         abstract fun TunelDao(): TunelDao
         abstract fun SurcoDao(): SurcoDao
         abstract fun TipoPlagaDao(): TipoPlagaDao
         abstract fun incidenciaDao(): IncidenciaDao
-}
+    }

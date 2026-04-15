@@ -31,4 +31,6 @@ object AppModule {
     @Provides fun provideSurcoDao(db: AppDatabase): SurcoDao = db.SurcoDao()
     @Provides fun provideTipoPlagaDao(db: AppDatabase): TipoPlagaDao = db.TipoPlagaDao()
     @Provides fun provideIncidenciaDao(db: AppDatabase): IncidenciaDao = db.incidenciaDao()
+
+    @Provides fun provideUsuarioRanchoDao(db: AppDatabase): UsuarioRanchoDao = db.UsuarioRanchoDao()
 }

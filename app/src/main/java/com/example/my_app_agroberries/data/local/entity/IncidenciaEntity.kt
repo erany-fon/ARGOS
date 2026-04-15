@@ -2,6 +2,8 @@ package com.example.my_app_agroberries.data.local.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import androidx.room.Index
+
 
 @Entity(
     tableName = "incidencias",
@@ -10,20 +12,25 @@ import androidx.room.PrimaryKey
         entity = SurcoEntity::class,
         parentColumns = ["idSurco"],
         childColumns = ["idSurco"],
-        onDelete = ForeignKey.CASCADE //si se borra el surco se borra la incidencia
+        onDelete = ForeignKey.CASCADE
     ),
         ForeignKey(
             entity = TipoPlagaEntity::class,
             parentColumns = ["idTipoPlaga"],
             childColumns = ["idTipoPlaga"],
-            onDelete = ForeignKey.CASCADE //si se borra el tipo de plaga se borra la incidencia
+            onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = UsuarioEntity::class,
             parentColumns = ["idUsuario"],
             childColumns = ["idUsuario"],
-            onDelete = ForeignKey.CASCADE //si se borra el usuario se borra la incidencia
-        )
+            onDelete = ForeignKey.CASCADE
+        ),
+    ],
+    indices = [
+        Index(value = ["idSurco"]),
+        Index(value = ["idTipoPlaga"]),
+        Index(value = ["idUsuario"])
     ]
 )
 data class IncidenciaEntity(
