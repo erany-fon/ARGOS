@@ -24,13 +24,22 @@ class DatabaseSeeder @Inject constructor(
             db.UsuarioDao().insertUsuario(
                 UsuarioEntity(
                     idUsuario = 1,
+                    idRol = 1,
                     nombre = "admin",
-                    apellido = "Prueba",
+                    apellidoP = "Prueba",
+                    apellidoM = "Usuario",
+                    usuario = "admin",
                     email = "admin@agroberries.com",
-                    contrasenaHash = "1234",  // en producción irá hasheado
-                    rol = "supervisor"
+                    passwordHash = "1234"  // en producción irá hasheado
                 )
             )
+
+            // Roles
+            db.RolesDao().insertAll(listOf(
+                RolesEntity(idRol = 1, nombreRol = "Supervisor"),
+                RolesEntity(idRol = 2, nombreRol = "Técnico"),
+                RolesEntity(idRol = 3, nombreRol = "Operario")
+            ))
 
             // Ranchos
             db.RanchoDao().insertAll(listOf(
@@ -52,37 +61,101 @@ class DatabaseSeeder @Inject constructor(
                 TunelEntity(idTunel = 3, numeroTunel = 1, idRancho = 2)
             ))
 
-            // Surcos
-            db.SurcoDao().insertAll(listOf(
-                SurcoEntity(idSurco = 1, numeroSurco = 1, tipoSurco = "Fresa", idTunel = 1),
-                SurcoEntity(idSurco = 2, numeroSurco = 2, tipoSurco = "Fresa", idTunel = 1),
-                SurcoEntity(idSurco = 3, numeroSurco = 3, tipoSurco = "Frambuesa", idTunel = 1),
-                SurcoEntity(idSurco = 4, numeroSurco = 1, tipoSurco = "Fresa", idTunel = 2),
-                SurcoEntity(idSurco = 5, numeroSurco = 2, tipoSurco = "Fresa", idTunel = 2)
+            //cultivos
+            db.CultivoDao().insertAll(listOf(
+                CultivoEntity(idCultivo = 1, nombreCultivo = "Fresa", descripcion = "Fruta de la pasión"),
+                CultivoEntity(idCultivo = 2, nombreCultivo = "Frambuesa", descripcion = "Fruta de la pasión"),
+                CultivoEntity(idCultivo = 3, nombreCultivo = "Tomate", descripcion = "Fruta de la pasión"),
+                CultivoEntity(idCultivo = 4, nombreCultivo = "Manzana", descripcion = "Fruta de la pasión")
             ))
 
+            // Surcos
+            db.SurcoDao().insertAll(listOf(
+                SurcoEntity(idSurco = 1, numeroSurco = 1, cultivo = "Fresa", idTunel = 1, idCultivo = 1),
+                SurcoEntity(idSurco = 2, numeroSurco = 2, cultivo = "Fresa", idTunel = 1, idCultivo = 1),
+                SurcoEntity(idSurco = 3, numeroSurco = 3, cultivo = "Frambuesa", idTunel = 1, idCultivo = 2),
+                SurcoEntity(idSurco = 4, numeroSurco = 1, cultivo = "Fresa", idTunel = 2, idCultivo = 1),
+                SurcoEntity(idSurco = 5, numeroSurco = 2, cultivo = "Fresa", idTunel = 2, idCultivo = 1)
+            ))
+
+            // Plagas
+            db.PlagaDao().insertAll(listOf(
+                PlagaEntity(idPlaga = 1, nombrePlaga = "Tetranychus urticae", descripcion = "Araña roja común"),
+                PlagaEntity(idPlaga = 2, nombrePlaga = "Aphis gossypii", descripcion = "Pulgón del algodón"),
+                PlagaEntity(idPlaga = 3, nombrePlaga = "Frankliniella occidentalis", descripcion = "Trips de las flores"),
+                PlagaEntity(idPlaga = 4, nombrePlaga = "Bemisia tabaci", descripcion = "Mosca blanca del tabaco")
+            ))
             //  Tipos de plaga
             db.TipoPlagaDao().insertAll(listOf(
                 TipoPlagaEntity(
                     idTipoPlaga = 1,
+                    idPlaga = 1,
                     nombreTipoPlaga = "Araña Roja",
                     descripcion = "Ácaro que ataca el follaje"
                 ),
                 TipoPlagaEntity(
                     idTipoPlaga = 2,
+                    idPlaga = 2,
                     nombreTipoPlaga = "Pulgón",
                     descripcion = "Insecto chupador de savia"
                 ),
                 TipoPlagaEntity(
                     idTipoPlaga = 3,
+                    idPlaga = 3,
                     nombreTipoPlaga = "Trips",
                     descripcion = "Insecto pequeño que daña flores"
                 ),
                 TipoPlagaEntity(
                     idTipoPlaga = 4,
+                    idPlaga = 4,
                     nombreTipoPlaga = "Mosca Blanca",
                     descripcion = "Insecto volador plaga común"
                 )
+            ))
+
+            //incidencias
+            db.incidenciaDao().insertAll(listOf(
+                IncidenciaEntity(
+                    idIncidencia = 1,
+                    idSurco = 1,
+                    idTipoPlaga = 1,
+                    idUsuario = 1,
+                    fecha = System.currentTimeMillis() - 86400000,
+                    nivelAlerta = 3,
+                    comentarios = "Incidencia grave",
+                    fotoUrl = "https://picsum.photos/200/300",
+                    sincronizado = false
+                ),
+                IncidenciaEntity(
+                    idIncidencia = 2,
+                    idSurco = 2,
+                    idTipoPlaga = 2,
+                    idUsuario = 1,
+                    fecha = System.currentTimeMillis() - 172800000,
+                    nivelAlerta = 2,
+                    comentarios = "Incidencia moderada",
+                    fotoUrl = "https://picsum.photos/200/300",
+                    sincronizado = false
+                ),
+                IncidenciaEntity(
+                    idIncidencia = 3,
+                    idSurco = 3,
+                    idTipoPlaga = 2,
+                    idUsuario = 1,
+                    fecha = System.currentTimeMillis() - 259200000,
+                    nivelAlerta = 1,
+                    comentarios = "Incidencia pequeña",
+                    fotoUrl = "https://picsum.photos/200/300",
+                    sincronizado = false
+                )
+            ))
+
+
+            // Detalles de incidencias
+            db.detalleIncidenciaDao().insertAll(listOf(
+                DetalleIncidenciasEntity(idDetalleIncidencia = 1, idIncidencia = 1, idTipoPlaga = 1, idPlaga = 1, cantidadPlaga = 150),
+                DetalleIncidenciasEntity(idDetalleIncidencia = 2, idIncidencia = 2, idTipoPlaga = 2, idPlaga = 2, cantidadPlaga = 200),
+                DetalleIncidenciasEntity(idDetalleIncidencia = 3, idIncidencia = 3, idTipoPlaga = 3, idPlaga = 3, cantidadPlaga = 50)
             ))
         }
     }

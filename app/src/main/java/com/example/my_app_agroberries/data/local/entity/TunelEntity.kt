@@ -17,6 +17,7 @@ import androidx.room.PrimaryKey
 data class TunelEntity(
     @PrimaryKey
     val idTunel: Int,
+    val idRancho: Int,
     val numeroTunel: Int,
-    val idRancho: Int
+
 )

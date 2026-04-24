@@ -121,7 +121,7 @@ private fun SurcoItem(
                     fontSize = 16.sp
                 )
                 Text(
-                    text = "Cultivo: ${surco.tipoSurco}",
+                    text = "Cultivo: ${surco.numeroSurco}",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

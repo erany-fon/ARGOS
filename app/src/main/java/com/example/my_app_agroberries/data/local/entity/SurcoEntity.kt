@@ -7,18 +7,27 @@ import androidx.room.Index
 
 @Entity(
     tableName = "surcos",
-    foreignKeys = [ForeignKey(
-        entity = TunelEntity::class,
-        parentColumns = ["idTunel"],
-        childColumns = ["idTunel"],
-        onDelete = ForeignKey.CASCADE //si se borra el tunel tambien se borra el surco
-    )],
-    indices = [Index(value = ["idTunel"])]
+    foreignKeys = [
+        ForeignKey(
+            entity = TunelEntity::class,
+            parentColumns = ["idTunel"],
+            childColumns = ["idTunel"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = CultivoEntity::class,
+            parentColumns = ["idCultivo"],
+            childColumns = ["idCultivo"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [Index(value = ["idTunel"]), Index(value = ["idCultivo"])]
 )
 data class SurcoEntity(
     @PrimaryKey
     val idSurco: Int,
+    val idTunel: Int,
+    val idCultivo: Int,
     val numeroSurco: Int,
-    val tipoSurco: String,
-    val idTunel: Int
+    val cultivo: String,
 )

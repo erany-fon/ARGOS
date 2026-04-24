@@ -2,9 +2,10 @@ package com.example.my_app_agroberries.domain.model
 
 data class Usuario (
     val idUsuario: Int,
+    val idRol: Int,
     val nombre: String,
-    val apellido: String,
+    val apellidoP: String,
+    val apellidoM: String,
     val email: String,
-    //val contraseña: String, nunca en el models
-    val rol: String
+    val usuario: String
 )

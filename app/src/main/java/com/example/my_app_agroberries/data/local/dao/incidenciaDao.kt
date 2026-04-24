@@ -9,17 +9,21 @@ interface IncidenciaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertIncidencia(incidencia: IncidenciaEntity)
 
-    // historial del usuario
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(incidencias: List<IncidenciaEntity>)
+
     @Query("SELECT * FROM incidencias WHERE idUsuario = :idUsuario ORDER BY fecha DESC")
     fun getIncidenciasByUsuario(idUsuario: Int): Flow<List<IncidenciaEntity>>
 
-    // las que aun no se han enviado al servidor
-    @Query("SELECT * FROM incidencias WHERE sincronizado = 0")
+    @Query("SELECT * FROM incidencias WHERE idIncidencia = :id")
+    suspend fun getIncidenciaById(id: Int): IncidenciaEntity?
+
+    @Query("SELECT * FROM incidencias WHERE sincronizado = 0 ORDER BY fecha ASC")
     suspend fun getPendientesSincronizar(): List<IncidenciaEntity>
 
-    // marcar como sincronizada cuando llegue al servidor
-    @Query("UPDATE incidencias SET sincronizado = 1 WHERE idIncidencia = :id")
-    suspend fun marcarSincronizada(id: Int)
+
+    @Query("UPDATE incidencias SET sincronizado = 1 WHERE idIncidencia = :idIncidencia")
+    suspend fun marcarSincronizada(idIncidencia: Int)
 
     @Query("DELETE FROM incidencias")
     suspend fun clearIncidencias()

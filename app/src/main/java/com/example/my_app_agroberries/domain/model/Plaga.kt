@@ -1,9 +1,7 @@
 package com.example.my_app_agroberries.domain.model
 
-
-data class TipoPlaga(
-    val idTipoPlaga: Int,
+data class Plaga(
     val idPlaga: Int,
-    val nombreTipoPlaga: String,
+    val nombrePlaga: String,
     val descripcion: String
 )

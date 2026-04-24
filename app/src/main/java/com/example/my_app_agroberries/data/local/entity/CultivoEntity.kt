@@ -2,11 +2,11 @@ package com.example.my_app_agroberries.data.local.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "tipos_plaga")
-data class TipoPlagaEntity(
+@Entity(tableName = "cultivos")
+data class CultivoEntity(
     @PrimaryKey
-    val idTipoPlaga: Int,
-    val idPlaga: Int,
-    val nombreTipoPlaga: String,
+    val idCultivo: Int,
+    val nombreCultivo: String,
     val descripcion: String
 )
+

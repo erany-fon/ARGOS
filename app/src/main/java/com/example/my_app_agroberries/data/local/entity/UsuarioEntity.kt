@@ -6,9 +6,11 @@ import androidx.room.PrimaryKey
 data class UsuarioEntity(
     @PrimaryKey
     val idUsuario: Int,
+    val idRol: Int,
     val nombre: String,
-    val apellido: String,
-    val email: String,
-    val contrasenaHash: String, //guardamos hash
-    val rol: String
+    val apellidoP: String,
+    val apellidoM: String,
+    val usuario: String,
+    val email: String, //checar con base de datos
+    val passwordHash: String, //guardamos hash
 )

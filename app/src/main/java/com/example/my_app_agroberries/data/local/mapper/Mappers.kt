@@ -2,20 +2,34 @@ package com.example.my_app_agroberries.data.local.mapper
 import com.example.my_app_agroberries.data.local.entity.*
 import com.example.my_app_agroberries.domain.model.*
 
+fun RolesEntity.toDomain(): Roles = Roles(
+    idRol = idRol,
+    nombreRol = nombreRol
+)
+
+fun Roles.toEntity(): RolesEntity = RolesEntity(
+    idRol = idRol,
+    nombreRol = nombreRol
+)
+
 fun UsuarioEntity.toDomain(): Usuario = Usuario(
     idUsuario = idUsuario,
+    idRol = idRol,
     nombre = nombre,
-    apellido = apellido,
+    apellidoP = apellidoP,
+    apellidoM = apellidoM,
     email = email,
-    rol = rol
+    usuario = usuario
 )
 fun Usuario.toEntity(hash: String): UsuarioEntity = UsuarioEntity(
     idUsuario = idUsuario,
+    idRol = idRol,
     nombre = nombre,
-    apellido = apellido,
+    apellidoP = apellidoP,
+    apellidoM = apellidoM,
     email = email,
-    rol = rol,
-    contrasenaHash = hash
+    usuario = usuario,
+    passwordHash = hash
 )
 
 fun RanchoEntity.toDomain(): Rancho = Rancho(
@@ -40,52 +54,96 @@ fun Tunel.toEntity(): TunelEntity = TunelEntity(
     idRancho = idRancho
 )
 
+fun CultivoEntity.toDomain(): Cultivo = Cultivo(
+    idCultivo = idCultivo,
+    nombreCultivo = nombreCultivo,
+    descripcion = descripcion
+)
+
+fun Cultivo.toEntity(): CultivoEntity = CultivoEntity(
+    idCultivo = idCultivo,
+    nombreCultivo = nombreCultivo,
+    descripcion = descripcion
+)
+
 fun SurcoEntity.toDomain(): Surco = Surco(
     idSurco = idSurco,
     numeroSurco = numeroSurco,
-    tipoSurco = tipoSurco,
-    idTunel = idTunel
+    idTunel = idTunel,
+    idCultivo = idCultivo,
+    cultivo = cultivo
 )
 
 fun Surco.toEntity(): SurcoEntity = SurcoEntity(
     idSurco = idSurco,
     numeroSurco = numeroSurco,
-    tipoSurco = tipoSurco,
-    idTunel = idTunel
+    idTunel = idTunel,
+    idCultivo = idCultivo,
+    cultivo = cultivo
+)
+
+fun PlagaEntity.toDomain(): Plaga = Plaga(
+    idPlaga = idPlaga,
+    nombrePlaga = nombrePlaga,
+    descripcion = descripcion
+)
+
+fun Plaga.toEntity(): PlagaEntity = PlagaEntity(
+    idPlaga = idPlaga,
+    nombrePlaga = nombrePlaga,
+    descripcion = descripcion
 )
 
 fun TipoPlagaEntity.toDomain(): TipoPlaga = TipoPlaga(
     idTipoPlaga = idTipoPlaga,
+    idPlaga = idPlaga,
     nombreTipoPlaga = nombreTipoPlaga,
     descripcion = descripcion
 )
 
 fun TipoPlaga.toEntity(): TipoPlagaEntity = TipoPlagaEntity(
     idTipoPlaga = idTipoPlaga,
+    idPlaga = idPlaga,
     nombreTipoPlaga = nombreTipoPlaga,
     descripcion = descripcion
 )
 
-fun IncidenciaEntity.toDomain(): IncidenciaPlaga = IncidenciaPlaga(
+fun IncidenciaEntity.toDomain(): Incidencia = Incidencia(
     idIncidencia = idIncidencia,
     idSurco = idSurco,
     idTipoPlaga = idTipoPlaga,
     idUsuario = idUsuario,
-    cantidadPlaga = cantidadPlaga,
     fecha = fecha,
+    nivelAlerta = nivelAlerta,
     comentarios = comentarios,
     fotoUrl = fotoUrl,
     sincronizado = sincronizado
 )
 
-fun IncidenciaPlaga.toEntity(): IncidenciaEntity = IncidenciaEntity(
+fun Incidencia.toEntity(): IncidenciaEntity = IncidenciaEntity(
     idIncidencia = idIncidencia,
     idSurco = idSurco,
     idTipoPlaga = idTipoPlaga,
     idUsuario = idUsuario,
-    cantidadPlaga = cantidadPlaga,
     fecha = fecha,
+    nivelAlerta = nivelAlerta,
     comentarios = comentarios,
     fotoUrl = fotoUrl,
     sincronizado = sincronizado
+)
+
+fun DetalleIncidenciasEntity.toDomain(): DetalleIncidencia = DetalleIncidencia(
+    idDetalleIncidencia = idDetalleIncidencia,
+    idIncidencia = idIncidencia,
+    idTipoPlaga = idTipoPlaga,
+    idPlaga = idPlaga,
+    cantidadPlaga = cantidadPlaga
+)
+
+fun DetalleIncidencia.toEntity(): DetalleIncidenciasEntity = DetalleIncidenciasEntity(
+    idDetalleIncidencia = idDetalleIncidencia,
+    idIncidencia = idIncidencia,
+    idTipoPlaga = idTipoPlaga,
+    idPlaga = idPlaga,
+    cantidadPlaga = cantidadPlaga
 )

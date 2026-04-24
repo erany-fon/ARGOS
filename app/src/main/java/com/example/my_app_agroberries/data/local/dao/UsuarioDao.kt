@@ -13,16 +13,16 @@ interface UsuarioDao {
 
     @Query("""
         SELECT * FROM usuarios 
-        WHERE nombre = :nombre 
-        AND contrasenaHash = :hash 
+        WHERE usuario = :usuario 
+        AND passwordHash = :hash 
         LIMIT 1
     """)
-    suspend fun loginConNombre(nombre: String, hash: String): UsuarioEntity?
+    suspend fun loginConUsuario(usuario: String, hash: String): UsuarioEntity?
 
     @Query("""
         SELECT * FROM usuarios 
         WHERE email = :email 
-        AND contrasenaHash = :hash 
+        AND passwordHash = :hash 
         LIMIT 1
     """)
     suspend fun loginConEmail(email: String, hash: String): UsuarioEntity?

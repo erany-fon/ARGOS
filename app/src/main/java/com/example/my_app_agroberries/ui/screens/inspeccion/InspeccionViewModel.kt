@@ -1,7 +1,8 @@
 package com.example.my_app_agroberries.ui.screens.inspeccion
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.my_app_agroberries.domain.model.IncidenciaPlaga
+import com.example.my_app_agroberries.domain.model.Incidencia
+//import com.example.my_app_agroberries.domain.model.Incidencia
 import com.example.my_app_agroberries.domain.model.TipoPlaga
 import com.example.my_app_agroberries.domain.repository.TipoPlagaRepository
 import com.example.my_app_agroberries.domain.usecase.incidencia.GuardarIncidenciaUseCase
@@ -57,16 +58,16 @@ class InspeccionViewModel @Inject constructor(
         viewModelScope.launch {
             val estado = _uiState.value
 
-            val incidencia = IncidenciaPlaga(
+            val incidencia = Incidencia(
                 idIncidencia = 0,
                 idSurco = idSurco,
                 idTipoPlaga = estado.tipoPlagaSeleccionado?.idTipoPlaga ?: 0,
                 idUsuario = idUsuario,
-                cantidadPlaga = estado.cantidad.toIntOrNull() ?: 0,
+                nivelAlerta = 3,
                 fecha = System.currentTimeMillis(),
                 comentarios = estado.comentarios,
                 fotoUrl = "",
-                sincronizado = false  // pendiente de sync al servidor
+                sincronizado = false
             )
 
             _uiState.update { it.copy(isLoading = true, error = null) }
@@ -74,11 +75,13 @@ class InspeccionViewModel @Inject constructor(
             val result = guardarIncidencia(incidencia)
 
             result.fold(
-                onSuccess = {
+                onSuccess = { idIncidenciaGuardado ->
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            guardadoExitoso = true
+                            guardadoExitoso = true,
+                            cantidad = "",
+                            comentarios = ""
                         )
                     }
                 },
@@ -86,7 +89,7 @@ class InspeccionViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message
+                            error = error.message ?: "Error desconocido"
                         )
                     }
                 }

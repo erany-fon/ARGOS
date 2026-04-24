@@ -29,6 +29,11 @@ abstract class RepositoryModule {
     ): TunelRepository
 
     @Binds @Singleton
+    abstract fun bindCultivoRepository(
+        impl: CultivoRepositoryImpl
+    ): CultivoRepository
+
+    @Binds @Singleton
     abstract fun bindSurcoRepository(
         impl: SurcoRepositoryImpl
     ): SurcoRepository
@@ -42,4 +47,19 @@ abstract class RepositoryModule {
     abstract fun bindIncidenciaRepository(
         impl: IncidenciaRepositoryImpl
     ): IncidenciaRepository
+
+    @Binds @Singleton
+    abstract fun bindRolesRepository(
+        impl: RolesRepositoryImpl
+    ): RolesRepository
+
+    @Binds @Singleton
+    abstract fun bindPlagaRepository(
+        impl: PlagaRepositoryImpl
+    ): PlagaRepository
+
+    @Binds @Singleton
+    abstract fun bindDetalleIncidenciaRepository(
+        impl: DetalleIncidenciaRepositoryImpl
+    ): DetalleIncidenciaRepository
 }

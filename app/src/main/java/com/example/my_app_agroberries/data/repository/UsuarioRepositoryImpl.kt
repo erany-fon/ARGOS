@@ -15,7 +15,7 @@ class UsuarioRepositoryImpl @Inject constructor(
         val entity = if (identificador.contains("@")) {
             usuarioDao.loginConEmail(identificador, contrasena)
         } else {
-            usuarioDao.loginConNombre(identificador, contrasena)
+            usuarioDao.loginConUsuario(identificador, contrasena)
         }
         return entity?.toDomain()
     }

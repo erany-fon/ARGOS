@@ -37,11 +37,12 @@ data class IncidenciaEntity(
     @PrimaryKey(autoGenerate = true)
     val idIncidencia: Int = 0,
     val idSurco: Int,
-    val idTipoPlaga: Int,
     val idUsuario: Int,
-    val cantidadPlaga: Int,
+    val idTipoPlaga: Int,
     val fecha: Long,
+    val nivelAlerta: Int,
     val comentarios: String,
     val fotoUrl: String,
     val sincronizado: Boolean = false
+
 )
