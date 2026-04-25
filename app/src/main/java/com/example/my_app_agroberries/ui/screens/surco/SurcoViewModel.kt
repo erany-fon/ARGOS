@@ -20,9 +20,20 @@ class SurcoViewModel @Inject constructor(
 
     fun cargarSurco(idTunel: Int) {
         viewModelScope.launch {
-            getSurcosByTunel(idTunel).collect { surcos ->
+            try {
+                _uiState.update { it.copy(isLoading = true, error = null) }
+                getSurcosByTunel(idTunel).collect { surcos ->
+                    _uiState.update {
+                        it.copy(surcos = surcos, isLoading = false)
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("SurcoViewModel", "Error cargando surcos", e)
                 _uiState.update {
-                    it.copy(surcos = surcos, isLoading = false)
+                    it.copy(
+                        isLoading = false,
+                        error = "Error al cargar surcos: ${e.message}"
+                    )
                 }
             }
 

@@ -2,7 +2,6 @@ package com.example.my_app_agroberries.ui.screens.inspeccion
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.my_app_agroberries.domain.model.Incidencia
-//import com.example.my_app_agroberries.domain.model.Incidencia
 import com.example.my_app_agroberries.domain.model.TipoPlaga
 import com.example.my_app_agroberries.domain.repository.TipoPlagaRepository
 import com.example.my_app_agroberries.domain.usecase.incidencia.GuardarIncidenciaUseCase
@@ -28,8 +27,15 @@ class InspeccionViewModel @Inject constructor(
 
     private fun cargarTiposPlagas() {
         viewModelScope.launch {
-            tipoPlagaRepository.getAllTiposPlaga().collect { tipos ->
-                _uiState.update { it.copy(tiposPlagas = tipos) }
+            try {
+                tipoPlagaRepository.getAllTiposPlaga().collect { tipos ->
+                    _uiState.update { it.copy(tiposPlagas = tipos) }
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("InspeccionViewModel", "Error cargando plagas", e)
+                _uiState.update { 
+                    it.copy(error = "Error al cargar tipos de plagas")
+                }
             }
         }
     }
@@ -44,8 +50,7 @@ class InspeccionViewModel @Inject constructor(
     }
 
     fun onCantidadChange(value: String) {
-        // solo acepta números positivos
-        if (value.all { it.isDigit() }) {
+        if (value.isEmpty() || value.all { it.isDigit() }) {
             _uiState.update { it.copy(cantidad = value, error = null) }
         }
     }
@@ -56,44 +61,64 @@ class InspeccionViewModel @Inject constructor(
 
     fun guardar(idSurco: Int, idUsuario: Int) {
         viewModelScope.launch {
-            val estado = _uiState.value
+            try {
+                val estado = _uiState.value
 
-            val incidencia = Incidencia(
-                idIncidencia = 0,
-                idSurco = idSurco,
-                idTipoPlaga = estado.tipoPlagaSeleccionado?.idTipoPlaga ?: 0,
-                idUsuario = idUsuario,
-                nivelAlerta = 3,
-                fecha = System.currentTimeMillis(),
-                comentarios = estado.comentarios,
-                fotoUrl = "",
-                sincronizado = false
-            )
-
-            _uiState.update { it.copy(isLoading = true, error = null) }
-
-            val result = guardarIncidencia(incidencia)
-
-            result.fold(
-                onSuccess = { idIncidenciaGuardado ->
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            guardadoExitoso = true,
-                            cantidad = "",
-                            comentarios = ""
-                        )
-                    }
-                },
-                onFailure = { error ->
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            error = error.message ?: "Error desconocido"
-                        )
-                    }
+                if (estado.tipoPlagaSeleccionado == null) {
+                    _uiState.update { it.copy(error = "Selecciona tipo de plaga") }
+                    return@launch
                 }
-            )
+
+                if (estado.cantidad.isEmpty() || estado.cantidad.toIntOrNull() == null) {
+                    _uiState.update { it.copy(error = "Cantidad inválida") }
+                    return@launch
+                }
+
+                val incidencia = Incidencia(
+                    idIncidencia = 0,
+                    idSurco = idSurco,
+                    idTipoPlaga = estado.tipoPlagaSeleccionado.idTipoPlaga,
+                    idUsuario = idUsuario,
+                    nivelAlerta = 2,
+                    fecha = System.currentTimeMillis(),
+                    comentarios = estado.comentarios,
+                    fotoUrl = "",
+                    sincronizado = false
+                )
+
+                _uiState.update { it.copy(isLoading = true, error = null) }
+
+                val result = guardarIncidencia(incidencia)
+
+                result.fold(
+                    onSuccess = { idGuardado ->
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                guardadoExitoso = true,
+                                cantidad = "",
+                                comentarios = ""
+                            )
+                        }
+                    },
+                    onFailure = { error ->
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                error = error.message ?: "Error al guardar incidencia"
+                            )
+                        }
+                    }
+                )
+            } catch (e: Exception) {
+                android.util.Log.e("InspeccionViewModel", "Error guardando incidencia", e)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = "Error inesperado: ${e.message}"
+                    )
+                }
+            }
         }
     }
 }

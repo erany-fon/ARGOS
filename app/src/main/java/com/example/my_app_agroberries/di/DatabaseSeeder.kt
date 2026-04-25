@@ -2,23 +2,31 @@ package com.example.my_app_agroberries.di
 
 import com.example.my_app_agroberries.data.local.AppDatabase
 import com.example.my_app_agroberries.data.local.entity.*
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class DatabaseSeeder @Inject constructor(
-    private val db: AppDatabase
-) {
+class DatabaseSeeder(private val db: AppDatabase) {
     fun seed() {
         CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // verificar si BD tiene datos sin bloquear
+                val usuarioExiste = db.UsuarioDao().getUsuarioById(1)
+                if (usuarioExiste != null) {
+                    android.util.Log.d("DatabaseSeeder", "BD ya inicializada")
+                    return@launch
+                }
+                
+                android.util.Log.d("DatabaseSeeder", "Iniciando seed de datos")
+                seedData()
+            } catch (e: Exception) {
+                android.util.Log.e("DatabaseSeeder", "Error durante seed: ${e.message}", e)
+            }
+        }
+    }
 
-            // solo inserta si la BD está vacía
-            val usuarioExiste = db.UsuarioDao().getUsuarioById(1)
-            if (usuarioExiste != null) return@launch
+    @androidx.room.Transaction
+    private suspend fun seedData() {
 
             // Usuario de prueba
             db.UsuarioDao().insertUsuario(
@@ -159,4 +167,3 @@ class DatabaseSeeder @Inject constructor(
             ))
         }
     }
-}

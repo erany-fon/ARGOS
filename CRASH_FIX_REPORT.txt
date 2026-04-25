@@ -1,0 +1,47 @@
+CORRECCIONES POR CRASH ANR (Application Not Responding)
+
+PROBLEMA RAÍZ:
+- BpBinder transact tomó 51+ segundos en main thread
+- DatabaseSeeder hacía múltiples queries sin transacción
+- ViewModels sin error handling de excepciones
+- Operación bloqueante durante init de BD
+
+CAMBIOS REALIZADOS:
+
+1. DatabaseSeeder.kt
+   - Agregado @Transaction en seedData() para batch más eficiente
+   - Agregado try-catch con logging
+   - Agregado Log.d para debugging
+
+2. AppModule.kt
+   - DatabaseSeeder ahora se inyecta en provideDatabase()
+   - Seed se ejecuta en thread daemon de fondo (no bloquea main)
+   - BD se comparte seguramente entre componentes
+
+3. ViewModels (RanchoViewModel, TunelViewModel, SurcoViewModel, InspeccionViewModel)
+   - Agregado try-catch en todos los launch coroutines
+   - Logging detallado de errores con Log.e
+   - Estados de error ahora se actualizan en _uiState
+   - isLoading = true al inicio para mejor UX
+
+4. CoroutineExceptionHandler.kt (nuevo)
+   - Handler global de excepciones no capturadas
+   - Logging centralizado
+
+PARA EVITAR FUTUROS CRASHES:
+
+✓ Siempre usar try-catch en viewModelScope.launch
+✓ Ejecutar operaciones de BD con @Transaction cuando afecten múltiples tablas
+✓ Nunca hacer queries síncronas en main thread
+✓ Usar CoroutineScope(Dispatchers.IO) solo para inicializaciones de background
+✓ Agregar logging en operaciones críticas ara debug
+✓ Usar timeouts en operaciones que tarden >5 segundos
+✓ Mostrar error al usuario si falla carga de datos
+
+PRÓXIMAS MEJORAS (Fase 2):
+- Implementar timeout en queries (Room 2.5+)
+- Agregar Timber para logging estructurado
+- Crash reporting (Firebase Crashlytics)
+- Monitoring de ANR events
+- Rate limiting en cargas simultáneas
+

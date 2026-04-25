@@ -20,11 +20,22 @@ class RanchoViewModel @Inject constructor(
 
     fun cargarRanchos(idUsuario: Int) {
         viewModelScope.launch {
-            getRanchosByUsuario(idUsuario).collect { ranchos ->
+            try {
+                _uiState.update { it.copy(isLoading = true, error = null) }
+                getRanchosByUsuario(idUsuario).collect { ranchos ->
+                    _uiState.update {
+                        it.copy(
+                            ranchos = ranchos,
+                            isLoading = false
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("RanchoViewModel", "Error cargando ranchos", e)
                 _uiState.update {
                     it.copy(
-                        ranchos = ranchos,
-                        isLoading = false
+                        isLoading = false,
+                        error = "Error al cargar ranchos: ${e.message}"
                     )
                 }
             }

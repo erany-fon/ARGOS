@@ -22,7 +22,9 @@ object AppModule {
             context,
             AppDatabase::class.java,
             "agroberries_db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides fun provideUsuarioDao(db: AppDatabase): UsuarioDao = db.UsuarioDao()

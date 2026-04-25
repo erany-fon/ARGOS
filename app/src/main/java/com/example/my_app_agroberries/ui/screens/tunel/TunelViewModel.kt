@@ -20,9 +20,20 @@ class TunelViewModel @Inject constructor(
 
     fun cargarTuneles(idRancho: Int) {
         viewModelScope.launch {
-            getTunelesByRancho(idRancho).collect { tuneles ->
+            try {
+                _uiState.update { it.copy(isLoading = true, error = null) }
+                getTunelesByRancho(idRancho).collect { tuneles ->
+                    _uiState.update {
+                        it.copy(tuneles = tuneles, isLoading = false)
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("TunelViewModel", "Error cargando túneles", e)
                 _uiState.update {
-                    it.copy(tuneles = tuneles, isLoading = false)
+                    it.copy(
+                        isLoading = false,
+                        error = "Error al cargar túneles: ${e.message}"
+                    )
                 }
             }
         }

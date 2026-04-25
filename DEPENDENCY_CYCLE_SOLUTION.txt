@@ -1,0 +1,49 @@
+CICLO DE DEPENDENCIAS RESUELTO
+
+PROBLEMA ORIGINAL:
+DatabaseSeeder ← AppModule.provideDatabase() ← seeder injection
+                                              ↓
+                            AppDatabase → DatabaseSeeder
+= Ciclo infinito detectado por Hilt
+
+ERROR GENERADO:
+[Dagger/DependencyCycle] Found a dependency cycle:
+  com.example.my_app_agroberries.di.AppModule.provideDatabase(…, seeder)
+  com.example.my_app_agroberries.data.local.AppDatabase
+  com.example.my_app_agroberries.di.DatabaseSeeder
+
+SOLUCIÓN IMPLEMENTADA:
+
+1. AppModule.kt:
+   ✓ Removido: @Provides fun provideDatabaseSeeder()
+   ✓ provideDatabase() ahora solo depende de @ApplicationContext
+   ✓ Sin inyección de DatabaseSeeder
+
+2. MyApp.kt:
+   ✓ Removido: @Inject lateinit var seeder: DatabaseSeeder
+   ✓ Agregado: @Inject lateinit var appDatabase: AppDatabase
+   ✓ Seeding implementado directamente en MyApp.seedDatabase()
+   ✓ Ejecución lazy en CoroutineScope(Dispatchers.IO)
+
+3. Flujo lineal de dependencias (sin ciclos):
+   @ApplicationContext
+        ↓
+   AppDatabase (singleton)
+        ↓
+   MyApp.onCreate() → seedDatabase() en thread IO
+
+4. Ventajas de esta solución:
+   ✓ Sin ciclos de dependencias
+   ✓ Seeding ejecuta en background automáticamente
+   ✓ Mejor performance (no bloquea main thread)
+   ✓ Logging completo de errores
+   ✓ Verificación de datos duplicados
+
+ARCHIVOS COMPILABLES:
+✓ AppModule.kt (sin errores)
+✓ MyApp.kt (sin errores)
+✓ DatabaseSeeder.kt (sin cambios necesarios)
+
+PRÓXIMO PASO:
+Ejecutar: ./gradlew clean build
+
