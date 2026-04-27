@@ -14,6 +14,7 @@ import com.example.my_app_agroberries.ui.screens.rancho.RanchoScreen
 import com.example.my_app_agroberries.ui.screens.tunel.TunelScreen
 import com.example.my_app_agroberries.ui.screens.surco.SurcoScreen
 import com.example.my_app_agroberries.ui.screens.inspeccion.InspeccionScreen
+import com.example.my_app_agroberries.ui.screens.inspeccion.SensadoScreen
 
 @Composable
 fun NavGraph(
@@ -49,13 +50,14 @@ fun NavGraph(
                 }
             )
         }
+
+        // ── Perfil ────────────────────────────────────
         composable(
-            route = Routes.Rancho.BASE,
+            route = Routes.Perfil.BASE,
             arguments = listOf(
                 navArgument("idUsuario") { type = NavType.IntType }
             )
         ) { backStackEntry ->
-
             val idUsuario = backStackEntry.arguments?.getInt("idUsuario") ?: 0
             PerfilScreen(
                 idUsuario = idUsuario,
@@ -65,7 +67,7 @@ fun NavGraph(
             )
         }
 
-
+        // ── Rancho ────────────────────────────────────
         composable(
             route = Routes.Rancho.BASE,
             arguments = listOf(
@@ -81,6 +83,7 @@ fun NavGraph(
             )
         }
 
+        // ── Túnel ─────────────────────────────────────
         composable(
             route = Routes.Tunel.BASE,
             arguments = listOf(
@@ -92,11 +95,14 @@ fun NavGraph(
                 idRancho = idRancho,
                 onNavigateToSurco = { idTunel ->
                     navController.navigate(Routes.Surco.createRoute(idTunel))
+                },
+                onNavigateToSensado = { idTunel ->
+                    navController.navigate(Routes.Sensado.createRoute(idTunel))
                 }
             )
         }
 
-
+        // ── Surco ─────────────────────────────────────
         composable(
             route = Routes.Surco.BASE,
             arguments = listOf(
@@ -114,11 +120,13 @@ fun NavGraph(
                 }
             )
         }
+
+        // ── Inspección ────────────────────────────────
         composable(
             route = Routes.Inspeccion.BASE,
             arguments = listOf(
                 navArgument("idSurco") { type = NavType.IntType },
-                navArgument("idUsuario") { type = NavType.IntType }  // ← nuevo
+                navArgument("idUsuario") { type = NavType.IntType }
             )
         ) { backStackEntry ->
             val idSurco = backStackEntry.arguments?.getInt("idSurco") ?: 0
@@ -126,12 +134,23 @@ fun NavGraph(
             InspeccionScreen(
                 idSurco = idSurco,
                 idUsuario = idUsuario,
-                //idUsuario = idUsuario,
-                //    idSurco = idSurco,
-                //
                 onRegistroGuardado = {
-                    // regresa a Surco después de guardar se supone pero algo falla
+                    navController.popBackStack()
+                }
+            )
+        }
 
+        // ── Sensado (Nueva) ───────────────────────────
+        composable(
+            route = Routes.Sensado.BASE,
+            arguments = listOf(
+                navArgument("idTunel") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val idTunel = backStackEntry.arguments?.getInt("idTunel") ?: 0
+            SensadoScreen(
+                idTunel = idTunel,
+                onNavigateBack = {
                     navController.popBackStack()
                 }
             )
