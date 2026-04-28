@@ -6,10 +6,17 @@ sealed class Routes(val route: String) {
     object Login : Routes("login")
 
     // ── Principal ─────────────────────────────────────
+    object Dashboard : Routes("dashboard/{idUsuario}") {
+        const val BASE = "dashboard/{idUsuario}"
+        fun createRoute(idUsuario: Int) = "dashboard/$idUsuario"
+    }
+
     object Perfil : Routes("perfil/{idUsuario}") {
         const val BASE = "perfil/{idUsuario}"
         fun createRoute(idUsuario: Int) = "perfil/$idUsuario"
     }
+
+    object Chat : Routes("chat")
 
     data class Rancho(val idUsuario: Int) : Routes("rancho/{idUsuario}") {
 

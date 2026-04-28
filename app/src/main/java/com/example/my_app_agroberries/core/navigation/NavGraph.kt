@@ -7,14 +7,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+
+// Importaciones de tus pantallas
 import com.example.my_app_agroberries.ui.screens.splash.SplashScreen
 import com.example.my_app_agroberries.ui.screens.login.LoginScreen
+import com.example.my_app_agroberries.ui.screens.dashboard.DashboardScreen
 import com.example.my_app_agroberries.ui.screens.perfil.PerfilScreen
 import com.example.my_app_agroberries.ui.screens.rancho.RanchoScreen
 import com.example.my_app_agroberries.ui.screens.tunel.TunelScreen
 import com.example.my_app_agroberries.ui.screens.surco.SurcoScreen
 import com.example.my_app_agroberries.ui.screens.inspeccion.InspeccionScreen
 import com.example.my_app_agroberries.ui.screens.inspeccion.SensadoScreen
+import com.example.my_app_agroberries.ui.screens.chat.ChatScreen // <-- IMPORTADO
 
 @Composable
 fun NavGraph(
@@ -30,8 +34,6 @@ fun NavGraph(
             SplashScreen(
                 onNavigateToLogin = {
                     navController.navigate(Routes.Login.route) {
-                        // elimina Splash del back stack
-                        // el usuario no puede regresar al splash
                         popUpTo(Routes.Splash.route) { inclusive = true }
                     }
                 }
@@ -42,11 +44,31 @@ fun NavGraph(
         composable(route = Routes.Login.route) {
             LoginScreen(
                 onLoginSuccess = { idUsuario ->
-                    navController.navigate(Routes.Rancho.createRoute(idUsuario)) {
-                        // elimina Login del back stack
-                        // el usuario no puede regresar al login con atrás
+                    navController.navigate(Routes.Dashboard.createRoute(idUsuario)) {
                         popUpTo(Routes.Login.route) { inclusive = true }
                     }
+                }
+            )
+        }
+
+        // ── Dashboard ─────────────────────────────────
+        composable(
+            route = Routes.Dashboard.BASE,
+            arguments = listOf(
+                navArgument("idUsuario") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val idUsuario = backStackEntry.arguments?.getInt("idUsuario") ?: 0
+
+            DashboardScreen(
+                onNavigateToParcelas = {
+                    navController.navigate(Routes.Rancho.createRoute(idUsuario))
+                },
+                onNavigateToTuneles = {
+                    navController.navigate(Routes.Rancho.createRoute(idUsuario))
+                },
+                onNavigateToChat = { // <-- AHORA SE PASA LA FUNCIÓN
+                    navController.navigate(Routes.Chat.route)
                 }
             )
         }
@@ -67,7 +89,16 @@ fun NavGraph(
             )
         }
 
-        // ── Rancho ────────────────────────────────────
+        // ── Chat ──────────────────────────────────────
+        composable(route = Routes.Chat.route) {
+            ChatScreen(
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // ── Rancho (Mis Parcelas) ─────────────────────
         composable(
             route = Routes.Rancho.BASE,
             arguments = listOf(
@@ -110,7 +141,6 @@ fun NavGraph(
             )
         ) { backStackEntry ->
             val idTunel = backStackEntry.arguments?.getInt("idTunel") ?: 0
-            // recupera idUsuario del back stack desde RanchoScreen
             val idUsuario = navController.previousBackStackEntry
                 ?.arguments?.getInt("idUsuario") ?: 0
             SurcoScreen(
@@ -140,7 +170,7 @@ fun NavGraph(
             )
         }
 
-        // ── Sensado (Nueva) ───────────────────────────
+        // ── Sensado (Túneles IoT) ─────────────────────
         composable(
             route = Routes.Sensado.BASE,
             arguments = listOf(
